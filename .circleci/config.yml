@@ -1,3 +1,4 @@
+
 defaults: &defaults
   docker:
     # specify the version you desire here
@@ -9,3 +10,31 @@ defaults: &defaults
         AWS_REGION: ${AWS_REGION}
         PRODUCT: ${PRODUCT}
         ENV_NAME: ${ENV_NAME}
+
+set_workspace: &set_workspace
+  # check effects
+  working_directory: /app
+
+version: 2
+jobs:
+  testt-3.9:
+    <<: *defaults
+    <<: *set_workspace
+
+    steps:
+      - checkout
+      - *defaults
+      - run:
+          name: deploy
+          command: |
+            mkdir ~/.aws
+            echo "[default]" > ~/.aws/credentials
+            echo "aws_access_key_id = ${AWS_SECRET_KEY}" >> ~/.aws/credentials
+            echo "aws_secret_access_key = ${AWS_ACCESS_KEY}" >> ~/.aws/credentials
+            echo "[default]" >> ~/.aws/config
+            echo "region =${AWS_REGION}" >> ~/.aws/config
+            echo "output = json" >> ~/.aws/config
+            echo "env_name   = \"${ENV_NAME}\"" >> ~terraform.tfvar
+            echo "product    = \"${PRODUCT}\"" >> ~terraform.tfvar
+            echo "aws_region = \"${AWS_REGION}\"" >> ~terraform.tfvar
+            terraform plan
