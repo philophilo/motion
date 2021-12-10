@@ -38,6 +38,7 @@ jobs:
             echo "product    = \"${PRODUCT}\"" >> ~terraform.tfvar
             echo "aws_region = \"${AWS_REGION}\"" >> ~terraform.tfvar
             terraform plan
+            print("------------------")
 
 workflows:
   build-then-deploy:
