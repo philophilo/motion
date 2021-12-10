@@ -1,0 +1,11 @@
+defaults: &defaults
+  docker:
+    # specify the version you desire here
+    # use `-browsers` prefix for selenium tests, e.g. `3.6.1-browsers`
+    - image: philophilo/py-tf-aws
+      environment:
+        AWS_SECRET_KEY: ${AWS_SECRET_KEY}
+        AWS_ACCESS_KEY: ${AWS_ACCESS_KEY}
+        AWS_REGION: ${AWS_REGION}
+        PRODUCT: ${PRODUCT}
+        ENV_NAME: ${ENV_NAME}
