@@ -17,7 +17,7 @@ set_workspace: &set_workspace
 
 version: 2
 jobs:
-  testt-3.9:
+  test-3.9:
     <<: *defaults
     <<: *set_workspace
 
@@ -38,3 +38,8 @@ jobs:
             echo "product    = \"${PRODUCT}\"" >> ~terraform.tfvar
             echo "aws_region = \"${AWS_REGION}\"" >> ~terraform.tfvar
             terraform plan
+
+workflows:
+  build-then-deploy:
+    jobs:
+      - test-3.9
