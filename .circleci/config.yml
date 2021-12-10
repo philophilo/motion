@@ -1,31 +1,21 @@
-
-defaults: &defaults
-  docker:
-    # specify the version you desire here
-    # use `-browsers` prefix for selenium tests, e.g. `3.6.1-browsers`
-    - image: philophilo/py-tf-aws
-      environment:
-        AWS_SECRET_KEY: ${AWS_SECRET_KEY}
-        AWS_ACCESS_KEY: ${AWS_ACCESS_KEY}
-        AWS_REGION: ${AWS_REGION}
-        PRODUCT: ${PRODUCT}
-        ENV_NAME: ${ENV_NAME}
-
-set_workspace: &set_workspace
-  # check effects
-  working_directory: /app
-
-version: 2
+version: 2.1
 jobs:
-  test-3.9:
-    <<: *defaults
-    <<: *set_workspace
-
+  build:
+    working_directory: /app
+    docker:
+      - image: philophilo/py-tf-aws
+        auth:
+          username: $DOCKER_USERNAME
+          password: $DOCKER_PASSWORD
+        environment:
+          AWS_SECRET_KEY: $AWS_SECRET_KEY
+          AWS_ACCESS_KEY: $AWS_ACCESS_KEY
+          AWS_REGION: $AWS_REGION
+          PRODUCT: $PRODUCT
+          ENV_NAME: $ENV_NAME
     steps:
       - checkout
-      - *defaults
       - run:
-          name: deploy
           command: |
             mkdir ~/.aws
             echo "[default]" > ~/.aws/credentials
@@ -34,13 +24,7 @@ jobs:
             echo "[default]" >> ~/.aws/config
             echo "region =${AWS_REGION}" >> ~/.aws/config
             echo "output = json" >> ~/.aws/config
-            echo "env_name   = \"${ENV_NAME}\"" >> ~terraform.tfvar
-            echo "product    = \"${PRODUCT}\"" >> ~terraform.tfvar
-            echo "aws_region = \"${AWS_REGION}\"" >> ~terraform.tfvar
+            echo "env_name   = ${ENV_NAME}" > terraform.tfvars
+            echo "product    = ${PRODUCT}" >> terraform.tfvars
+            echo "aws_region = ${AWS_REGION}" >> terraform.tfvars
             terraform plan
-            print("------------------")
-
-workflows:
-  build-then-deploy:
-    jobs:
-      - test-3.9
