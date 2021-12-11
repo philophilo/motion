@@ -64,7 +64,7 @@ class TestLambdaFunction(unittest.TestCase):
         
         body = json.loads(result.get('body'))
         self.assertEqual(body.get('httpMethod'),  'GET')
-        self.assertEqual(body.get('message'),  'The username does not exist')
+        self.assertEqual(body.get('message'),  'There is no key match')
 
 
     def test_post_handler(self):
@@ -74,5 +74,6 @@ class TestLambdaFunction(unittest.TestCase):
         self.assertIn('body', result)
         self.assertIn('statusCode', result)
 
+        print('>>>>>>>>>>>>>>>>>>', result)
         self.assertEqual(result.get('statusCode'), 200)
         self.assertEqual(result.get('headers'),  {'Content-Type': 'application/json'})

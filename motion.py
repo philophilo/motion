@@ -14,8 +14,6 @@ LOGGER.setLevel(logging.INFO)
 DST_BUCKET = os.environ.get('DST_BUCKET')
 REGION = os.environ.get('REGION')
 
-s3 = boto3.resource('s3', region_name=REGION)
-
 # DynamoDB
 DB_TABLE_NAME = os.environ.get('DB_TABLE_NAME', 'workmotion_test_users')
 DYNAMODB_CLIENT = boto3.resource('dynamodb', region_name=REGION)
@@ -28,6 +26,7 @@ def check_key(data):
     response = DYNAMODB_TABLE.query(
             KeyConditionExpression=Key(
                 'username').eq(data.get('username')))
+    print(response, "<<<<<<<<<<<<<<<<<<<<<<<<<<<")
     result = response.get('Items')
     if result:
         return response.get('Items')[0]

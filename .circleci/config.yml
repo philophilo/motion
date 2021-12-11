@@ -10,7 +10,7 @@ jobs:
         environment:
           AWS_SECRET_KEY: $AWS_SECRET_KEY
           AWS_ACCESS_KEY: $AWS_ACCESS_KEY
-          AWS_REGION: $AWS_REGION
+          REGION: $REGION
           PRODUCT: $PRODUCT
           ENV_NAME: $ENV_NAME
     steps:
@@ -22,13 +22,13 @@ jobs:
             echo "aws_access_key_id = ${AWS_SECRET_KEY}" >> ~/.aws/credentials
             echo "aws_secret_access_key = ${AWS_ACCESS_KEY}" >> ~/.aws/credentials
             echo "[default]" >> ~/.aws/config
-            echo "region =${AWS_REGION}" >> ~/.aws/config
-            pip install nose moto boto3
+            echo "region =${REGION}" >> ~/.aws/config
+            pip install -r requirements.txt
             nosetests
             echo "output = json" >> ~/.aws/config
             echo "env_name   = \"${ENV_NAME}\"" > terraform.tfvars
             echo "product    = \"${PRODUCT}\"" >> terraform.tfvars
-            echo "aws_region = \"${AWS_REGION}\"" >> terraform.tfvars
+            echo "aws_region = \"${REGION}\"" >> terraform.tfvars
             echo "---------------"
             terraform init
             terraform plan
