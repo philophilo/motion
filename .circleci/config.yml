@@ -24,9 +24,9 @@ jobs:
             echo "[default]" >> ~/.aws/config
             echo "region =${AWS_REGION}" >> ~/.aws/config
             echo "output = json" >> ~/.aws/config
-            echo "env_name   = ${ENV_NAME}" > terraform.tfvars
-            echo "product    = ${PRODUCT}" >> terraform.tfvars
-            echo "aws_region = ${AWS_REGION}" >> terraform.tfvars
+            echo "env_name   = \"${ENV_NAME}\"" > terraform.tfvars
+            echo "product    = \"${PRODUCT}\"" >> terraform.tfvars
+            echo "aws_region = \"${AWS_REGION}\"" >> terraform.tfvars
             echo "---------------"
             terraform init
             terraform plan
