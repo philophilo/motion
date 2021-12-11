@@ -23,6 +23,7 @@ jobs:
             echo "aws_secret_access_key = ${AWS_ACCESS_KEY}" >> ~/.aws/credentials
             echo "[default]" >> ~/.aws/config
             echo "region =${AWS_REGION}" >> ~/.aws/config
+            nosetests
             echo "output = json" >> ~/.aws/config
             echo "env_name   = \"${ENV_NAME}\"" > terraform.tfvars
             echo "product    = \"${PRODUCT}\"" >> terraform.tfvars
