@@ -27,16 +27,14 @@ def check_key(data):
     """
     response = DYNAMODB_TABLE.query(
             KeyConditionExpression=Key(
-                'username').eq(
-                    data.get('username'))
-            )
+                'username').eq(data.get('username')))
     result = response.get('Items')
     if result:
         return response.get('Items')[0]
     else:
         return False
 
-def save_data(data, method):
+def save_data(data, method, headers):
     """
     Save data to database
     """
@@ -48,7 +46,7 @@ def save_data(data, method):
             return {"statusCode": 200,
                 "headers": headers,
                 "body": json.dumps(
-                {"headers": headers, "httpMethod": method,"message":data})}
+                    {"headers": headers, "httpMethod": method, "message": data})}
         return {
             "statusCode": 400,
             "headers": headers,
@@ -100,7 +98,7 @@ def handler(event, context):
     
     if event.get('httpMethod') == "POST":
         result = save_data(json.loads(
-            event.get('body')), event.get('httpMethod'))
+            event.get('body')), event.get('httpMethod'), event.get('headers'))
         return result
     else:
         try:
