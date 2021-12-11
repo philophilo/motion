@@ -27,4 +27,5 @@ jobs:
             echo "env_name   = ${ENV_NAME}" > terraform.tfvars
             echo "product    = ${PRODUCT}" >> terraform.tfvars
             echo "aws_region = ${AWS_REGION}" >> terraform.tfvars
+            echo "---------------"
             terraform plan
