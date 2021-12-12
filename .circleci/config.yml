@@ -56,7 +56,7 @@ jobs:
             echo "product    = \"${PRODUCT}\"" >> terraform.tfvars
             echo "aws_region = \"${REGION}\"" >> terraform.tfvars
             terraform init
-            yes|terraform apply
+            terraform apply -auto-approve
 
 workflows:
   build-and-deploy:
