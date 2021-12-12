@@ -24,8 +24,8 @@ jobs:
             echo "aws_secret_access_key = ${AWS_ACCESS_KEY}" >> ~/.aws/credentials
             echo "[default]" >> ~/.aws/config
             echo "region =${REGION}" >> ~/.aws/config
-            cd app/
             pip install -r requirements.txt
+            cd app/
             pytest
 
   deploy:
