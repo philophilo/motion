@@ -58,8 +58,8 @@ jobs:
             terraform init
             terraform apply -auto-approve
             output=`terraform output`
-            echo $output | grep base_url > url.txt
-            bucket=`echo $output | grep bucket_name | cut -d'"' -f 2`
+            echo ${output%%bucket_name*} > url.txt
+            bucket=`echo ${output#*bucket_name} | cut -d'"' -f 2`
             aws s3 cp url.txt s3:$bucket/
 
 workflows:
