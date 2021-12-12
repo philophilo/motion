@@ -1,0 +1,25 @@
+version: '2.4'
+
+services:
+  lambda:
+    restart: always
+    image: philophilo/py-tf-aws
+    build: .
+    environment:
+      AWS_SECRET_KEY: $AWS_SECRET_KEY
+      AWS_ACCESS_KEY: $AWS_ACCESS_KEY
+      REGION: $REGION
+      PRODUCT: $PRODUCT
+      ENV_NAME: $ENV_NAME
+      DB_TABLE_NAME: $DB_TABLE_NAME
+    volumes:
+      - ${PWD}:/app
+    stdin_open: true
+    tty: true
+    container_name: lambda_fn
+    networks:
+      - lambda_fn
+
+networks:
+  lambda_fn:
+    driver: bridge
