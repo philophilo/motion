@@ -15,33 +15,46 @@ configure_aws() {
 }
 
 run_tests() {
-    cd /app
+    cd /app/app
     pytest
 }
 
 configure_terraform() {
-    cd /app
+    cd /app/terraform
     echo "env_name   = \"$ENV_NAME\"" >> terraform.tfvar
     echo "product    = \"$PRODUCT\"" >> terraform.tfvar
     echo "aws_region = \"$AWS_REGION\"" >> terraform.tfvar
 }
 
+terraform_init() {
+    cd /app/terraform
+    terraform init
+}
+
 terraform_plan() {
-    cd /app
-    terraform_plan
+    cd /app/terraform
+    terraform plan
 }
 
 terraform_apply() {
-    yes|terraform terraform_apply
+    cd /app/terraform
+    terraform apply
 }
 
-if [[ $1 == "configure_aws" ]];
+if [[ $1 == "configure" ]];
 then
     configure_aws
-elif [[ $1 == "configure_terraform" ]];
-then
     configure_terraform
 elif [[ $1 == "test" ]];
 then
     run_tests
+elif [[ $1 == "init" ]];
+then
+    terraform_init
+elif [[ $1 == "plan" ]];
+then
+    terraform_plan
+elif [[ $1 == "apply" ]];
+then
+    terraform_apply
 fi
