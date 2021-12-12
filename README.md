@@ -56,7 +56,7 @@ DB_TABLE_NAME=" "
 
 - `make plan` Runs `terraform plan`.
 
-- `make apply` Runs `terraform apply`. It will require approval by typing `yes`. The circleci pipeline however [auto approves](https://github.com/philophilo/motion/blob/master/.circleci/config.yml#L61] the plan when running on (master)[https://github.com/philophilo/motion/blob/master/.circleci/config.yml#L71-L77)
+- `make apply` Runs `terraform apply`. It will require approval by typing `yes`. The circleci pipeline however [auto approves](https://github.com/philophilo/motion/blob/master/.circleci/config.yml#L61) the plan when running on [master](https://github.com/philophilo/motion/blob/master/.circleci/config.yml#L71-L77)
 
 - `make shell` Allows opening the container's shell.
 
