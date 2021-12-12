@@ -41,6 +41,11 @@ terraform_apply() {
     terraform apply
 }
 
+terraform_output() {
+    cd /app/terraform
+    terraform output
+}
+
 if [[ $1 == "configure" ]];
 then
     configure_aws
@@ -57,4 +62,7 @@ then
 elif [[ $1 == "apply" ]];
 then
     terraform_apply
+elif [[ $1 == "output" ]];
+then
+    terraform_output
 fi
