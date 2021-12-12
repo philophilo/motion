@@ -167,12 +167,6 @@ resource "aws_lambda_permission" "lambda_gateway_permission" {
   source_arn    = "${aws_apigatewayv2_api.lambda.execution_arn}/*/*"
 }
 
-output "base_url" {
-  description = "Base URL for API Gateway stage."
-
-  value = aws_apigatewayv2_stage.lambda_stage.invoke_url
-}
-
 resource "aws_s3_bucket" "bucket" {
   bucket        = "${var.product}-${var.env_name}-bucketxyz"
   force_destroy = true
