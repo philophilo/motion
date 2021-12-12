@@ -25,6 +25,7 @@ jobs:
             echo "[default]" >> ~/.aws/config
             echo "region =${REGION}" >> ~/.aws/config
             pip install -r requirements.txt
+            cd app/
             pytest
 
   deploy:
@@ -55,6 +56,7 @@ jobs:
             echo "env_name   = \"${ENV_NAME}\"" > terraform.tfvars
             echo "product    = \"${PRODUCT}\"" >> terraform.tfvars
             echo "aws_region = \"${REGION}\"" >> terraform.tfvars
+            cd terraform/
             terraform init
             terraform apply -auto-approve
             output=`terraform output`
