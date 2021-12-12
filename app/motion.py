@@ -74,7 +74,7 @@ def get_data(data, method, headers):
             return {"statusCode": 200,
                 "headers": headers,
                 "body": json.dumps({"headers": headers, "httpMethod": method,
-                    "message", "Your details"
+                    "message": "Your details",
                     "response":key_exists})}
             
         return {
