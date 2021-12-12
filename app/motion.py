@@ -46,13 +46,13 @@ def save_data(data, method, headers):
             return {"statusCode": 200,
                 "headers": headers,
                 "body": json.dumps(
-                    {"headers": headers, "httpMethod": method, "message": data})}
+                    {"headers": headers, "httpMethod": method, "response": data})}
         return {
             "statusCode": 400,
             "headers": headers,
             "body": json.dumps(
             {"headers": headers, "httpMethod": method,
-                "message": "The username already exists"})}
+                "response": "The username already exists"})}
         
     except ClientError as e:
         LOGGER.exception(e)
@@ -61,7 +61,7 @@ def save_data(data, method, headers):
             "headers": headers,
             "body": json.dumps(
             {"headers": headers, "httpMethod": method,
-                "message": "make sure to use username and password for keys"})}
+                "response": "make sure to use username and password for keys"})}
    
 def get_data(data, method, headers):
     """
@@ -74,19 +74,20 @@ def get_data(data, method, headers):
             return {"statusCode": 200,
                 "headers": headers,
                 "body": json.dumps({"headers": headers, "httpMethod": method,
-                    "message":key_exists})}
+                    "message", "Your details"
+                    "response":key_exists})}
             
         return {
             "statusCode": 400,
             "headers": headers,
             "body": json.dumps({"headers": headers, "httpMethod": method,
-                "message": "The username does not exist"})}
+                "response": "The username does not exist"})}
     except ClientError as e:
         LOGGER.exception(e)
         return {"statusCode": 400,
             "headers": headers,
             "body": json.dumps({"headers": headers, "httpMethod": method,
-                "message": "There is no key match"})}
+                "response": "There is no key match"})}
         
 
 def handler(event, context):

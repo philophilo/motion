@@ -8,7 +8,6 @@ from time import time
 
 REGION = os.environ.get('REGION')
 DB_TABLE_NAME = os.environ.get('DB_TABLE_NAME')
-print('..............................', DB_TABLE_NAME)
 
 @pytest.fixture
 def use_moto():
@@ -17,7 +16,6 @@ def use_moto():
         dynamodb = boto3.resource('dynamodb', region_name=REGION)
 
         # Create the table
-        print(">>>>>>>>>>>>>>>>>>>>>>", DB_TABLE_NAME)
         dynamodb.create_table(
             TableName=DB_TABLE_NAME,
             KeySchema=[
@@ -49,13 +47,12 @@ def test_get_handler(use_moto):
         'body': '{"username": "xyzi", "password": "xyzi"}'
     }
 
-    print(get_event, ">>>>>>>>>>>>>>>>>")
     result = handler(get_event, "")
     print(result)
     assert result['statusCode'] == 400
     body = json.loads(result.get('body'))
     assert body.get('httpMethod') ==  'GET'
-    assert body.get('message') == 'The username does not exist'
+    assert body.get('response') == 'The username does not exist'
 
 @mock_dynamodb2
 def test_post_handler(use_moto):
@@ -74,4 +71,4 @@ def test_post_handler(use_moto):
     body = json.loads(result['body'])
     assert result.get('statusCode') == 200
     assert result.get('headers') == {'Content-Type': 'application/json'}
-    assert body['message'] == {"username": "user-" + str(int(time())), "password": "xyzi"}
+    assert body['response'] == {"username": "user-" + str(int(time())), "password": "xyzi"}
