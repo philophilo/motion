@@ -53,10 +53,10 @@ jobs:
             echo "[default]" >> ~/.aws/config
             echo "region =${REGION}" >> ~/.aws/config
             echo "output = json" >> ~/.aws/config
+            cd terraform/
             echo "env_name   = \"${ENV_NAME}\"" > terraform.tfvars
             echo "product    = \"${PRODUCT}\"" >> terraform.tfvars
             echo "aws_region = \"${REGION}\"" >> terraform.tfvars
-            cd terraform/
             terraform init
             terraform apply -auto-approve
             output=`terraform output`
