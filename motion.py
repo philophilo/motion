@@ -11,11 +11,10 @@ from boto3.dynamodb.conditions import Key
 LOGGER = logging.getLogger()
 LOGGER.setLevel(logging.INFO)
 
-DST_BUCKET = os.environ.get('DST_BUCKET')
 REGION = os.environ.get('REGION')
 
 # DynamoDB
-DB_TABLE_NAME = os.environ.get('DB_TABLE_NAME', 'workmotion_test_users')
+DB_TABLE_NAME = os.environ.get('DB_TABLE_NAME')
 DYNAMODB_CLIENT = boto3.resource('dynamodb', region_name=REGION)
 DYNAMODB_TABLE = DYNAMODB_CLIENT.Table(DB_TABLE_NAME)
 
@@ -23,10 +22,12 @@ def check_key(data):
     """
     Check if key exists
     """
+    
     response = DYNAMODB_TABLE.query(
             KeyConditionExpression=Key(
-                'username').eq(data.get('username')))
-    print(response, "<<<<<<<<<<<<<<<<<<<<<<<<<<<")
+                'username').eq(data.get('username'))
+    )
+    
     result = response.get('Items')
     if result:
         return response.get('Items')[0]
@@ -61,7 +62,7 @@ def save_data(data, method, headers):
             "body": json.dumps(
             {"headers": headers, "httpMethod": method,
                 "message": "make sure to use username and password for keys"})}
-    
+   
 def get_data(data, method, headers):
     """
     Get data from the database
@@ -93,8 +94,8 @@ def handler(event, context):
     Handle events
     """
     LOGGER.info('Event structure: %s', event)
-    LOGGER.info('DST_BUCKET: %s', DST_BUCKET)
-    
+    LOGGER.info('REGION: %s', os.environ.get('REGION'))
+
     if event.get('httpMethod') == "POST":
         result = save_data(json.loads(
             event.get('body')), event.get('httpMethod'), event.get('headers'))

@@ -1,79 +1,77 @@
 import json
 import os
-import unittest
+import pytest
 import boto3
-import mock
 
-from moto import mock_s3
 from moto import mock_dynamodb2
 from time import time
 
-from motion import handler
+REGION = os.environ.get('REGION')
+DB_TABLE_NAME = os.environ.get('DB_TABLE_NAME')
+print('..............................', DB_TABLE_NAME)
 
+@pytest.fixture
+def use_moto():
+    @mock_dynamodb2
+    def dynamodb_client():
+        dynamodb = boto3.resource('dynamodb', region_name=REGION)
 
-
-S3_BUCKET_NAME = 'test-bucket-' + str(int(time()))
-DEFAULT_REGION = 'us-east-2'
-DYNAMODB_TABLE_NAME = 'workmotion_test_users'
+        # Create the table
+        print(">>>>>>>>>>>>>>>>>>>>>>", DB_TABLE_NAME)
+        dynamodb.create_table(
+            TableName=DB_TABLE_NAME,
+            KeySchema=[
+                {
+                    'AttributeName': 'username',
+                    'KeyType': 'HASH'
+                },
+            ],
+            AttributeDefinitions=[
+                {
+                    'AttributeName': 'username',
+                    'AttributeType': 'S'
+                },
+            ],
+            BillingMode='PAY_PER_REQUEST'
+        )
+        return dynamodb
+    return dynamodb_client
 
 @mock_dynamodb2
-@mock.patch.dict(os.environ, {'DB_TABLE_NAME': DYNAMODB_TABLE_NAME})
-class TestLambdaFunction(unittest.TestCase):
-    def setUp(self):
-        # DynamoDB setup
-        self.dynamodb = boto3.client('dynamodb')
-        self.get_event = {
-                    'httpMethod': 'GET',
-                    "headers": {
-                        'Content-Type': 'application/json',
-                    },
-                    'body': '{"username":"xyzi","password":"xyzi"}'
-                }
-        self.post_event = {
-                    'httpMethod': 'POST',
-                    'headers': {
-                        'Content-Type': 'application/json',
-                    },
-                    'body': '{"username": "xyzi", "password": "xyzi"}'
-                }
-        try:
-            self.table = self.dynamodb.create_table(
-                    TableName=DYNAMODB_TABLE_NAME,
-                KeySchema=[
-                    {'KeyType': 'HASH', 'AttributeName': 'product'}
-                ],
-                AttributeDefinitions=[
-                    {'AttributeName': 'product', 'AttributeType': 'S'}
-                ],
-                ProvisionedThroughput={
-                    'ReadCapacityUnits': 5,
-                    'WriteCapacityUnits': 5
-                }
-            )
-        except self.dynamodb.exceptions.ResourceInUseException:
-            self.table = boto3.resource('dynamodb').Table(DYNAMODB_TABLE_NAME)
-    def test_get_handler(self):
-        result = handler(self.get_event, {})
+def test_get_handler(use_moto):
+    from motion import handler
+    use_moto()
+    get_event = {
+        'httpMethod': 'GET',
+        'headers': {
+            'Content-Type': 'application/json',
+        },
+        'body': '{"username": "xyzi", "password": "xyzi"}'
+    }
 
-        self.assertIn('headers', result)
-        self.assertIn('body', result)
-        self.assertIn('statusCode', result)
+    print(get_event, ">>>>>>>>>>>>>>>>>")
+    result = handler(get_event, "")
+    print(result)
+    assert result['statusCode'] == 400
+    body = json.loads(result.get('body'))
+    assert body.get('httpMethod') ==  'GET'
+    assert body.get('message') == 'The username does not exist'
 
-        self.assertEqual(result.get('statusCode'), 400)
-        self.assertEqual(result.get('headers'),  {'Content-Type': 'application/json'})
-        
-        body = json.loads(result.get('body'))
-        self.assertEqual(body.get('httpMethod'),  'GET')
-        self.assertEqual(body.get('message'),  'There is no key match')
+@mock_dynamodb2
+def test_post_handler(use_moto):
+    use_moto()
+    from motion import handler
+    table = boto3.resource('dynamodb', region_name=REGION).Table(DB_TABLE_NAME)
+    post_event = {
+        'httpMethod': 'POST',
+        'headers': {
+            'Content-Type': 'application/json',
+        },
+        'body': '{"username": "user-' + str(int(time())) + '", "password": "xyzi"}'
+    }
 
-
-    def test_post_handler(self):
-        result = handler(self.post_event, {})
-
-        self.assertIn('headers', result)
-        self.assertIn('body', result)
-        self.assertIn('statusCode', result)
-
-        print('>>>>>>>>>>>>>>>>>>', result)
-        self.assertEqual(result.get('statusCode'), 200)
-        self.assertEqual(result.get('headers'),  {'Content-Type': 'application/json'})
+    result = handler(post_event, "")
+    body = json.loads(result['body'])
+    assert result.get('statusCode') == 200
+    assert result.get('headers') == {'Content-Type': 'application/json'}
+    assert body['message'] == {"username": "user-" + str(int(time())), "password": "xyzi"}
