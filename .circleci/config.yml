@@ -18,7 +18,7 @@ jobs:
       - checkout
       - run:
           command: |
-            mkdir ~/.aws
+            mkdir -p ~/.aws
             echo "[default]" > ~/.aws/credentials
             echo "aws_access_key_id = ${AWS_SECRET_KEY}" >> ~/.aws/credentials
             echo "aws_secret_access_key = ${AWS_ACCESS_KEY}" >> ~/.aws/credentials
@@ -26,10 +26,46 @@ jobs:
             echo "region =${REGION}" >> ~/.aws/config
             pip install -r requirements.txt
             pytest
+
+  deploy:
+    working_directory: /app
+    docker:
+      - image: philophilo/py-tf-aws
+        auth:
+          username: $DOCKER_USERNAME
+          password: $DOCKER_PASSWORD
+        environment:
+          AWS_SECRET_KEY: $AWS_SECRET_KEY
+          AWS_ACCESS_KEY: $AWS_ACCESS_KEY
+          REGION: $REGION
+          PRODUCT: $PRODUCT
+          ENV_NAME: $ENV_NAME
+          DB_TABLE_NAME: $DB_TABLE_NAME
+    steps:
+      - checkout
+      - run:
+          command: |
+            mkdir -p ~/.aws
+            echo "[default]" > ~/.aws/credentials
+            echo "aws_access_key_id = ${AWS_SECRET_KEY}" >> ~/.aws/credentials
+            echo "aws_secret_access_key = ${AWS_ACCESS_KEY}" >> ~/.aws/credentials
+            echo "[default]" >> ~/.aws/config
+            echo "region =${REGION}" >> ~/.aws/config
             echo "output = json" >> ~/.aws/config
             echo "env_name   = \"${ENV_NAME}\"" > terraform.tfvars
             echo "product    = \"${PRODUCT}\"" >> terraform.tfvars
             echo "aws_region = \"${REGION}\"" >> terraform.tfvars
-            echo "---------------"
             terraform init
             terraform plan
+
+workflows:
+  build-and-deploy:
+    jobs:
+      - build
+      - deploy:
+          requires:
+            - build
+          filters:
+            branches:
+              only:
+                - master
