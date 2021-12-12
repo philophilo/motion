@@ -1,10 +1,10 @@
-[!![CircleCI](https://circleci.com/gh/philophilo/motion.svg?style=shield)](https://app.circleci.com/pipelines/github/philophilo/motion?filter=all)
+[![CircleCI](https://circleci.com/gh/philophilo/motion.svg?style=shield)](https://app.circleci.com/pipelines/github/philophilo/motion?filter=all)
 
-### Introduction
+## Introduction
 
 Terraform is used to deploy a lambda function to AWS. The lambda function is in `app/` while the terraform code is in `terraform/`. The project uses `GNUMake` to orchestrate local docker when developing locally. The CI tool used is CircleCI. Deployments are made to the infrastructure when a pull request is merged to master. Other branches run test only. Terraform is run in a docker container for consistency in the development environments.
 
-#### Requirements
+## Requirements
 
 Ensure that the following are installed
 ```
@@ -12,7 +12,7 @@ Ensure that the following are installed
 - GNUMake
 ```
 
-#### Setup
+### Setup
 
 Clone the repository and create `.env` file in the root directory and add the following creadentials
 
@@ -31,34 +31,34 @@ ENV_NAME=" "
 DB_TABLE_NAME=" "
 ```
 
-`AWS_SECRET_KEY`, `AWS_ACCESS_KEY` and `REGION` are AWS key credentials, ensure that they are named appropriately! Such that `AWS_ACCESS_KEY` > `aws_access_key_id` and `aws_secret_access_key` > `AWS_SECRET_KEY`. The output has been defaulted to json. These are required for both the lambda function to run tests and terraform AWS provider to setup the terraform infrastructure plan
+- `AWS_SECRET_KEY`, `AWS_ACCESS_KEY` and `REGION` are AWS key credentials, ensure that they are named appropriately! Such that `AWS_ACCESS_KEY` > `aws_access_key_id` and `aws_secret_access_key` > `AWS_SECRET_KEY`. The output has been defaulted to json. These are required for both the lambda function to run tests and terraform AWS provider to setup the terraform infrastructure plan
 
-`PRODUCT` is name of the application, this is custom. It is used in terraform to identify that resources belong to this particular application. However, it should not be too long as resource names have a character limit. This is only used by terraform.
+- `PRODUCT` is name of the application, this is custom. It is used in terraform to identify that resources belong to this particular application. However, it should not be too long as resource names have a character limit. This is only used by terraform.
 
-`ENV_NAME` This is the name of the of the environment. It can be one of `test`, `staging` or `prod`. The names are validated in (terraform/variables.tf)[https://github.com/philophilo/motion/blob/master/terraform/variables.tf#L1-L11]. This is only used by terraform.
+- `ENV_NAME` This is the name of the of the environment. It can be one of `test`, `staging` or `prod`. The names are validated in [terraform/variables.tf](https://github.com/philophilo/motion/blob/master/terraform/variables.tf#L1-L11). This is only used by terraform.
 
-`DB_TABLE_NAME` is the name of the DynamDB created by terraform. It is required for both terraform and the lambda function.
+- `DB_TABLE_NAME` is the name of the DynamDB created by terraform. It is required for both terraform and the lambda function.
 
 
-##### Running with make commands on a local machine
+### Running with make commands on a local machine
 
-`make setup` Pulls the docker image `philophilo/py-tf-aws` which has terraform and AWS CLI installed. The command runs `docker-compose up` in detarched mode and then installs python requirements to run tests locally for the AWS lambda function.
+- `make setup` Pulls the docker image `philophilo/py-tf-aws` which has terraform and AWS CLI installed. The command runs `docker-compose up` in detarched mode and then installs python requirements to run tests locally for the AWS lambda function.
 
-`make conf` Configures both Terraform and AWS. It creates `/root/aws` and `terraform/terraform.tfvars` in the docker container.
+- `make conf` Configures both Terraform and AWS. It creates `/root/aws` and `terraform/terraform.tfvars` in the docker container.
 
-`make test` Runs tests in `app/test_motion.py` using pytest and moto for mocking AWS resources. This command call both `make setup` and `make conf`, it is therefore not required to run the previous commands to run tests.
+- `make test` Runs tests in `app/test_motion.py` using pytest and moto for mocking AWS resources. This command call both `make setup` and `make conf`, it is therefore not required to run the previous commands to run tests.
 
-`make down` Runs `docker-compose down` to stop the docker service
+- `make down` Runs `docker-compose down` to stop the docker service
 
-`make init` Runs `terraform init` to initialize terraform. This will download the provider plugins that are required.
+- `make init` Runs `terraform init` to initialize terraform. This will download the provider plugins that are required.
 
-`make plan` Runs `terraform plan`.
+- `make plan` Runs `terraform plan`.
 
-`make apply` Runs `terraform apply`. It will require approval by typing `yes`. The circleci pipeline however (auto approves)[https://github.com/philophilo/motion/blob/master/.circleci/config.yml#L61] the plan when running on (master)[https://github.com/philophilo/motion/blob/master/.circleci/config.yml#L71-L77]
+- `make apply` Runs `terraform apply`. It will require approval by typing `yes`. The circleci pipeline however [auto approves](https://github.com/philophilo/motion/blob/master/.circleci/config.yml#L61] the plan when running on (master)[https://github.com/philophilo/motion/blob/master/.circleci/config.yml#L71-L77)
 
-`make shell` Allows opening the container's shell.
+- `make shell` Allows opening the container's shell.
 
-`make output` This requires that `make apply` has been run already. It prints `base_url` from the api gateway and `bucket_name`.
+- `make output` This requires that `make apply` has been run already. It prints `base_url` from the api gateway and `bucket_name`.
 
 #### Accessing the Application
 
