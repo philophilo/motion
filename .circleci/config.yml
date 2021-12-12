@@ -47,8 +47,8 @@ jobs:
           command: |
             mkdir -p ~/.aws
             echo "[default]" > ~/.aws/credentials
-            echo "aws_access_key_id = ${AWS_SECRET_KEY}" >> ~/.aws/credentials
-            echo "aws_secret_access_key = ${AWS_ACCESS_KEY}" >> ~/.aws/credentials
+            echo "aws_access_key_id = ${AWS_ACCESS_KEY}" >> ~/.aws/credentials
+            echo "aws_secret_access_key = ${AWS_SECRET_KEY}" >> ~/.aws/credentials
             echo "[default]" >> ~/.aws/config
             echo "region =${REGION}" >> ~/.aws/config
             echo "output = json" >> ~/.aws/config
@@ -60,7 +60,7 @@ jobs:
             output=`terraform output`
             echo ${output%%bucket_name*} > url.txt
             bucket=`echo ${output#*bucket_name} | cut -d'"' -f 2`
-            aws s3 cp url.txt s3:$bucket/
+            aws s3 cp url.txt s3://$bucket/
 
 workflows:
   build-and-deploy:
