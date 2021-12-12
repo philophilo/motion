@@ -57,6 +57,10 @@ jobs:
             echo "aws_region = \"${REGION}\"" >> terraform.tfvars
             terraform init
             terraform apply -auto-approve
+            output=terraform output
+            echo $output | grep base_url > url.txt
+            bucket=`echo $output | grep bucket_name | cut -d'"' -f 2`
+            aws s3 cp url.txt s3:$bucket/
 
 workflows:
   build-and-deploy:
