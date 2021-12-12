@@ -70,11 +70,14 @@ On the otherhand, if executed from the pipeline, circleci will send the url to t
 
 ##### Example Test case
 
-Register the User
+Register a User with POST method
 
 `curl --header "Content-Type: application/json" -X "POST" --data '{"username":"xyz","password":"xyz"}' https://o5zaxoz6m6.execute-api.us-east-2.amazonaws.com/api/`
 
-Get the user
+Get the user with GET method
 
 `curl --header "Content-Type: application/json" -X "GET" --data '{"username":"xyz","password":"xyz"}' https://o5zaxoz6m6.execute-api.us-east-2.amazonaws.com/api/`
 
+Using Postman of any other API platform
+
+<img width="1254" alt="Screenshot 2021-12-12 at 17 28 06" src="https://user-images.githubusercontent.com/12629658/145717595-79fe4bf7-2336-4489-a889-ed62b7aa0c8d.png">
