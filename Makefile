@@ -24,3 +24,6 @@ apply:
 
 shell:
 	@docker-compose exec lambda /bin/bash
+
+output:
+	@docker-compose exec lambda /app/script.sh output
