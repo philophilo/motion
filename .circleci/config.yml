@@ -13,6 +13,7 @@ jobs:
           REGION: $REGION
           PRODUCT: $PRODUCT
           ENV_NAME: $ENV_NAME
+          DB_TABLE_NAME: $DB_TABLE_NAME
     steps:
       - checkout
       - run:
