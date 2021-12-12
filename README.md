@@ -56,11 +56,15 @@ DB_TABLE_NAME=" "
 
 - `make plan` Runs `terraform plan`.
 
-- `make apply` Runs `terraform apply`. It will require approval by typing `yes`. The circleci pipeline however [auto approves](https://github.com/philophilo/motion/blob/master/.circleci/config.yml#L61] the plan when running on (master)[https://github.com/philophilo/motion/blob/master/.circleci/config.yml#L71-L77)
+- `make apply` Runs `terraform apply`. It will require approval by typing `yes`. The circleci pipeline however [auto approves](https://github.com/philophilo/motion/blob/master/.circleci/config.yml#L61) the plan when running on [master](https://github.com/philophilo/motion/blob/master/.circleci/config.yml#L71-L77)
 
 - `make shell` Allows opening the container's shell.
 
 - `make output` This requires that `make apply` has been run already. It prints `base_url` from the api gateway and `bucket_name`.
+
+### Continuous Integration (CI)
+
+CircleCi is used as the CI tool. It is configured to run tests on the lambda function. The tests run on all branches. The deployment to AWS is run master after a merge from a pull request.
 
 #### Accessing the Application
 
