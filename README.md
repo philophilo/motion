@@ -2,7 +2,9 @@
 
 ## Introduction
 
-Terraform is used to deploy a lambda function to AWS. The lambda function is in `app/` while the terraform code is in `terraform/`. The project uses `GNUMake` to orchestrate local docker when developing locally. The CI tool used is CircleCI. Deployments are made to the infrastructure when a pull request is merged to master. Other branches run test only. Terraform is run in a docker container for consistency in the development environments.
+Terraform is used to deploy a lambda function to AWS. The lambda function uses AWS DynamoDB to store a username and password. Access to the lambda function is given through AWS API gateway.
+
+The lambda function is in `app/` while the terraform code is in `terraform/`. The project uses `GNUMake` to orchestrate docker when developing locally. The CI tool used is CircleCI. Deployments are only made to the infrastructure when a pull request is merged to master. Other branches run test only. Terraform is run in a docker container for consistency in the development environments.
 
 ## Requirements
 
