@@ -27,3 +27,6 @@ shell:
 
 output:
 	@docker-compose exec lambda /app/script.sh output
+
+destroy:
+	@docker-compose exec lambda /app/script.sh destroy

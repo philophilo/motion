@@ -44,7 +44,7 @@ DB_TABLE_NAME=" "
 
 ### Running with make commands on a local machine
 
-- `make setup` Pulls the docker image `philophilo/py-tf-aws` which has terraform and AWS CLI installed. The command runs `docker-compose up` in detarched mode and then installs python requirements to run tests locally for the AWS lambda function.
+- `make setup` Builds the docker image `philophilo/py-tf-aws` which has terraform and AWS CLI installed. The command runs `docker-compose up` in detarched mode and then installs python requirements to run tests locally for the AWS lambda function.
 
 - `make conf` Configures both Terraform and AWS. It creates `/root/aws` and `terraform/terraform.tfvars` in the docker container.
 
@@ -61,6 +61,8 @@ DB_TABLE_NAME=" "
 - `make shell` Allows opening the container's shell.
 
 - `make output` This requires that `make apply` has been run already. It prints `base_url` from the api gateway and `bucket_name`.
+
+- `make destroy` Destroys all the AWS resources that were setup usinf terraform.
 
 ### Continuous Integration (CI)
 

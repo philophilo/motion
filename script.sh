@@ -46,6 +46,11 @@ terraform_output() {
     terraform output
 }
 
+terraform_destroy() {
+    cd /app/terraform
+    terraform destroy
+}
+
 if [[ $1 == "configure" ]];
 then
     configure_aws
