@@ -70,4 +70,7 @@ then
 elif [[ $1 == "output" ]];
 then
     terraform_output
+elif [[ $1 == "destroy" ]];
+then
+    terraform_destroy
 fi

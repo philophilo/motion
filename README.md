@@ -62,7 +62,7 @@ DB_TABLE_NAME=" "
 
 - `make output` This requires that `make apply` has been run already. It prints `base_url` from the api gateway and `bucket_name`.
 
-- `make destroy` Destroys all the AWS resources that were setup usinf terraform.
+- `make destroy` Destroys all the AWS resources that were setup using terraform.
 
 ### Continuous Integration (CI)
 
